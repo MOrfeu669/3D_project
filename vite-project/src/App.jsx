@@ -27,24 +27,31 @@ function App() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+    
+    //Textura de coisa
+    const uv = new THREE.TextureLoader().load('./assets/uv.jpeg')
+
     // --- Objetos ---
     const roundedBoxGeometry = new RoundedBoxGeometry(10, 10, 10);
-    const roundedBoxMaterial = new THREE.MeshPhongMaterial({ color: 0xb3ff00 });
+    const roundedBoxMaterial = new THREE.MeshStandardMaterial({ map: uv});
     const roundedBoxMesh = new THREE.Mesh(roundedBoxGeometry, roundedBoxMaterial);
     roundedBoxMesh.castShadow = true;
     roundedBoxMesh.receiveShadow = false;
     roundedBoxMesh.position.set(15, 0, 0);
     scene.add(roundedBoxMesh);
 
+    //#Textura chao
+    const brickWall = new THREE.TextureLoader().load('./assets/brick.jpeg')
+
     // "Chão"
     const roundedBoxGeometry1 = new RoundedBoxGeometry(100, 1, 100, 10, 1);
-    const roundedBoxMaterial1 = new THREE.MeshPhongMaterial({ color: 0xfafafa });
+    const roundedBoxMaterial1 = new THREE.MeshStandardMaterial({ map: brickWall });
     const roundedBoxMesh1 = new THREE.Mesh(roundedBoxGeometry1, roundedBoxMaterial1);
     roundedBoxMesh1.receiveShadow = true;
     roundedBoxMesh1.position.y = -6;
     scene.add(roundedBoxMesh1);
 
-    // Teapot
+    // cuia
     const teapotGeometry = new TeapotGeometry(1, 8);
     const teapotMaterial = new THREE.MeshPhongMaterial({ color: 0x8888ff });
     const teapotMesh = new THREE.Mesh(teapotGeometry, teapotMaterial);
@@ -64,7 +71,7 @@ function App() {
     document.body.appendChild(stats.dom);
 
     // Luz ambiente suave
-    const al = new THREE.AmbientLight(0xffffff, 0.4);
+    const al = new THREE.AmbientLight(0xffffff, 0);
     scene.add(al);
 
     // GUI
@@ -83,7 +90,7 @@ function App() {
     alF.open();
 
     // SpotLight
-    const sl = new THREE.SpotLight(0xffffff, 1, 0, Math.PI / 6, 0.2);
+    const sl = new THREE.SpotLight(0xffffff, 400, 0, Math.PI / 6, 0.2);
     sl.position.set(30, 40, 20);
     sl.castShadow = true;
     sl.shadow.mapSize.set(2048, 2048);
@@ -99,7 +106,7 @@ function App() {
       sl.visible = value;
       slHelper.visible = value;
     });
-    slFolder.add(sl, 'intensity', 0, 400, 0.1);
+    slFolder.add(sl, 'intensity', 1, 400, 0.1);
     slFolder.add(sl, 'angle', Math.PI / 32, Math.PI / 2, Math.PI / 64);
     slFolder.add(sl.position, 'x', -100, 100, 1);
     slFolder.add(sl.position, 'y', -100, 100, 1);
@@ -169,7 +176,8 @@ function App() {
 
       // Animação de giro da cuia
       teapotMesh.rotation.x += 0.01;
-      teapotMesh.rotation.y += 0.01;
+      teapotMesh.rotation.y += 1;
+      teapotMesh.rotation.z += 0.5;
 
       slHelper.update();
       plHelper.update();
