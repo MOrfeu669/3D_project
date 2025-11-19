@@ -4,7 +4,9 @@ import { GUI } from 'dat.gui';
 import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; 
 import Stats from 'three/examples/jsm/libs/stats.module';
+
 
 function App() {
   useEffect(() => {
@@ -28,10 +30,16 @@ function App() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     
+    
+
+    // --- Objetos ---
+
+    //#objetos .glft
+    
     //Textura de coisa
     const uv = new THREE.TextureLoader().load('./assets/uv.jpeg')
 
-    // --- Objetos ---
+    //#caixa cudo
     const roundedBoxGeometry = new RoundedBoxGeometry(10, 10, 10);
     const roundedBoxMaterial = new THREE.MeshStandardMaterial({ map: uv});
     const roundedBoxMesh = new THREE.Mesh(roundedBoxGeometry, roundedBoxMaterial);
@@ -57,7 +65,7 @@ function App() {
     const teapotMesh = new THREE.Mesh(teapotGeometry, teapotMaterial);
     teapotMesh.castShadow = true;
     teapotMesh.receiveShadow = false;
-    teapotMesh.position.set(0, 2, 0);
+    teapotMesh.position.set(0, 20, 0);
     scene.add(teapotMesh);
 
     // Controles e stats
@@ -106,7 +114,7 @@ function App() {
       sl.visible = value;
       slHelper.visible = value;
     });
-    slFolder.add(sl, 'intensity', 1, 400, 0.1);
+    slFolder.add(sl, 'intensity', 1, 1000, 0.1);
     slFolder.add(sl, 'angle', Math.PI / 32, Math.PI / 2, Math.PI / 64);
     slFolder.add(sl.position, 'x', -100, 100, 1);
     slFolder.add(sl.position, 'y', -100, 100, 1);
