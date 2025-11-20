@@ -5,6 +5,7 @@ import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; 
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 
@@ -35,7 +36,22 @@ function App() {
     // --- Objetos ---
 
     //#objetos .glft
-    
+    let loadedModel;
+    const glftLoader = new GLTFLoader();
+    glftLoader.load('./3DModels/su-47__berkut/scene.gltf', (gltfScene) => {
+      loadedModel = gltfScene;
+      // console.log(loadedModel);
+      gltfScene.scene.rotation.y += Math.PI / 8;
+      gltfScene.scene.position.x = -10;
+      gltfScene.scene.position.y = -5.5;
+      gltfScene.scene.position.z = -20;
+      gltfScene.scene.scale.set(2, 2, 2);
+      scene.add(gltfScene.scene);
+      const box = new THREE.Box3().setFromObject(gltfScene.scene);
+      console.log('gltf boundingBox:', box.min, box.max);
+      console.log('gltf size:', box.getSize(new THREE.Vector3()));
+      console.log('gltf position:', gltfScene.scene.position, 'scale:', gltfScene.scene.scale);
+    });
     //Textura de coisa
     const uv = new THREE.TextureLoader().load('./assets/uv.jpeg')
 
@@ -56,6 +72,7 @@ function App() {
     const roundedBoxMaterial1 = new THREE.MeshStandardMaterial({ map: brickWall });
     const roundedBoxMesh1 = new THREE.Mesh(roundedBoxGeometry1, roundedBoxMaterial1);
     roundedBoxMesh1.receiveShadow = true;
+    roundedBoxMesh.castShadow = true;
     roundedBoxMesh1.position.y = -6;
     scene.add(roundedBoxMesh1);
 
@@ -64,7 +81,7 @@ function App() {
     const teapotMaterial = new THREE.MeshPhongMaterial({ color: 0x8888ff });
     const teapotMesh = new THREE.Mesh(teapotGeometry, teapotMaterial);
     teapotMesh.castShadow = true;
-    teapotMesh.receiveShadow = false;
+    teapotMesh.receiveShadow = true;
     teapotMesh.position.set(0, 20, 0);
     scene.add(teapotMesh);
 
