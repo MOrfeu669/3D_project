@@ -5,7 +5,6 @@ import { TeapotGeometry } from 'three/examples/jsm/geometries/TeapotGeometry.js'
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'; 
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 
@@ -30,28 +29,22 @@ function App() {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    
-    
-
+    const cubeLoader = new THREE.CubeTextureLoader();
+    const skyboxPaths = [
+      './images/serenity_rt.jpg', // posX
+      './images/serenity_lf.jpg', // negX
+      './images/serenity_up.jpg', // posY
+      './images/serenity_dn.jpg', // negY
+      './images/serenity_ft.jpg', // posZ
+      './images/serenity_bk.jpg' // negZ
+    ];
+    const cubeTexture = cubeLoader.load(skyboxPaths, () => {
+    });
+    cubeTexture.encoding = THREE.sRGBEncoding;
+    scene.background = cubeTexture;
     // --- Objetos ---
 
-    //#objetos .glft
-    let loadedModel;
-    const glftLoader = new GLTFLoader();
-    glftLoader.load('./3DModels/su-47__berkut/scene.gltf', (gltfScene) => {
-      loadedModel = gltfScene;
-      // console.log(loadedModel);
-      gltfScene.scene.rotation.y += Math.PI / 8;
-      gltfScene.scene.position.x = -10;
-      gltfScene.scene.position.y = -5.5;
-      gltfScene.scene.position.z = -20;
-      gltfScene.scene.scale.set(2, 2, 2);
-      scene.add(gltfScene.scene);
-      const box = new THREE.Box3().setFromObject(gltfScene.scene);
-      console.log('gltf boundingBox:', box.min, box.max);
-      console.log('gltf size:', box.getSize(new THREE.Vector3()));
-      console.log('gltf position:', gltfScene.scene.position, 'scale:', gltfScene.scene.scale);
-    });
+ 
     //Textura de coisa
     const uv = new THREE.TextureLoader().load('./assets/uv.jpeg')
 
@@ -84,6 +77,24 @@ function App() {
     teapotMesh.receiveShadow = true;
     teapotMesh.position.set(0, 20, 0);
     scene.add(teapotMesh);
+
+       //#objetos .glft
+    let loadedModel;
+    const glftLoader = new GLTFLoader();
+    glftLoader.load('./3DModels/su-47__berkut/scene.gltf', (gltfScene) => {
+      loadedModel = gltfScene;
+      // console.log(loadedModel);
+      gltfScene.scene.rotation.y += Math.PI / 8;
+      gltfScene.scene.position.x = -10;
+      gltfScene.scene.position.y = -5.5;
+      gltfScene.scene.position.z = -20;
+      gltfScene.scene.scale.set(2, 2, 2);
+      scene.add(gltfScene.scene);
+      const box = new THREE.Box3().setFromObject(gltfScene.scene);
+      console.log('gltf boundingBox:', box.min, box.max);
+      console.log('gltf size:', box.getSize(new THREE.Vector3()));
+      console.log('gltf position:', gltfScene.scene.position, 'scale:', gltfScene.scene.scale);
+    });
 
     // Controles e stats
     const controls = new OrbitControls(camera, renderer.domElement);
